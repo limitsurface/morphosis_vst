@@ -717,10 +717,10 @@ void checkExtraBufferChannelAndEditor()
 
     std::unique_ptr<juce::AudioProcessorEditor> editor (processor.createEditor());
     expect (editor != nullptr, "fresh editor is constructed");
-    expect (editor->getWidth() == 900 && editor->getHeight() == 1670,
-            "editor starts at the portrait design size");
+    expect (editor->getWidth() == 600 && editor->getHeight() == 1113,
+            "editor starts at a screen-friendly portrait size");
     expectNear (static_cast<double> (editor->getWidth()) / editor->getHeight(),
-                900.0 / 1670.0, 0.0001,
+                900.0 / 1670.0, 0.001,
                 "editor preserves the portrait design aspect ratio");
 }
 

@@ -2843,7 +2843,7 @@ MorphosisAudioProcessorEditor::MorphosisAudioProcessorEditor (MorphosisAudioProc
     previousPreset.onClick = [this] { processorRef.selectPreviousPreset(); };
     nextPreset.onClick = [this] { processorRef.selectNextPreset(); };
 
-    setSize (900, 1670);
+    setSize (600, 1113);
     updatePresetLabel();
     updateLayoutMode();
     startTimerHz (30);
