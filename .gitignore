@@ -1,0 +1,17 @@
+# Out-of-source CMake, Visual Studio, and plugin outputs
+/build/
+/build-*/
+/out/
+/.vs/
+/.vscode/
+CMakeUserPresets.json
+*.user
+*.suo
+
+# Local test and editor output
+/snapshots/
+/results/
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db

@@ -1,0 +1,179 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1670" role="img" aria-labelledby="title desc">
+  <title id="title">MORPHOSIS portrait interface concept</title>
+  <desc id="desc">Portrait VST concept with a preset selector, stereo meters, a tall response graph, horizontal FMX controls, tabbed Sequencer and X-Y modes, and compact bottom gain controls. The XFORM control splits into XFORM and DIST when distortion layout is active. Gain captions show values on hover in this preview; the plugin also shows them during drag and keyboard editing.</desc>
+  <style>
+    @font-face { font-family: Plex; src: url('../../assets/fonts/IBMPlexMono-Regular.ttf'); font-weight: 400; }
+    @font-face { font-family: Plex; src: url('../../assets/fonts/IBMPlexMono-SemiBold.ttf'); font-weight: 600; }
+    :root { --font-scale: 1; --bg: #151515; --panel: #222222; --panel2: #2b2b2b; --stroke: #656565; --text: #f0f0f0; --muted: #bdbdbd; --neutral: #d0d0d0; --green: #4ddd90; --red: #ff707b; --orange: #ffaf63; }
+    text { font-family: Plex, 'IBM Plex Mono', Consolas, monospace; fill: var(--text); }
+    .xs { font-size: calc(14px * var(--font-scale)); }
+    .sm { font-size: calc(16px * var(--font-scale)); }
+    .md { font-size: calc(19px * var(--font-scale)); }
+    .lg { font-size: calc(24px * var(--font-scale)); }
+    .xl { font-size: calc(32px * var(--font-scale)); }
+    .bold { font-weight: 600; }
+    .muted { fill: var(--muted); }
+    .neutral { fill: var(--neutral); } .green { fill: var(--green); } .red { fill: var(--red); } .orange { fill: var(--orange); }
+    .panel { fill: var(--panel); stroke: var(--stroke); stroke-width: 1.5; }
+    .recess { fill: #111111; stroke: #686868; stroke-width: 1.5; }
+    .line { stroke: #555555; stroke-width: 1.2; }
+    .knob { fill: #3a3a3a; stroke: #7a7a7a; stroke-width: 2.5; }
+    .knob-inner { fill: #303030; stroke: #494949; stroke-width: 1; }
+    .slot { fill: #323232; stroke: #737373; stroke-width: 1.2; }
+    .slot-off { fill: #252525; stroke: #525252; stroke-width: 1; }
+    .gain-control { cursor: pointer; }
+    .gain-control .gain-value { display: none; }
+    .gain-control:hover .gain-label { display: none; }
+    .gain-control:hover .gain-value { display: inline; }
+  </style>
+  <defs>
+    <linearGradient id="meter" x2="1" y2="0">
+      <stop stop-color="#51d986"/><stop offset=".64" stop-color="#a8d95b"/><stop offset=".84" stop-color="#ffc35b"/><stop offset="1" stop-color="#ff7171"/>
+    </linearGradient>
+    <linearGradient id="graphFill" x2="0" y2="1">
+      <stop stop-color="#dedede" stop-opacity=".20"/><stop offset="1" stop-color="#dedede" stop-opacity="0"/>
+    </linearGradient>
+    <clipPath id="plotClip"><rect x="77" y="310" width="746" height="286" rx="2"/></clipPath>
+  </defs>
+
+  <rect width="900" height="1670" fill="var(--bg)"/>
+  <rect x="14" y="14" width="872" height="1642" rx="20" fill="none" stroke="#686868" stroke-width="1.5"/>
+
+  <text x="32" y="54" class="sm bold muted">TEMUSOUND</text>
+  <path d="M151 33v27" stroke="#898989" stroke-width="2"/>
+  <text x="170" y="57" class="xl bold">MORPHOSIS</text>
+  <text x="870" y="51" text-anchor="end" class="xs muted">STEREO MORPHING FILTER</text>
+
+  <rect x="28" y="83" width="844" height="106" rx="14" class="panel"/>
+  <text x="49" y="111" class="xs bold muted">PRESET</text>
+  <rect x="45" y="120" width="744" height="52" rx="8" fill="var(--panel2)" stroke="#878787"/>
+  <text id="preset-number" x="62" y="153" class="lg bold">043</text>
+  <text id="preset-name" x="122" y="153" class="lg">VowelSpace</text>
+  <path d="M750 143l8 8 8-8" fill="none" stroke="#d1d1d1" stroke-width="2"/>
+  <rect x="804" y="120" width="51" height="52" rx="8" fill="var(--panel2)" stroke="#878787"/>
+  <path d="M825 137l-9 9 9 9m11-18l9 9-9 9" fill="none" stroke="#dedede" stroke-width="2.5"/>
+
+  <rect x="28" y="207" width="844" height="414" rx="16" class="panel"/>
+  <text x="51" y="254" class="sm bold green">L</text>
+  <rect x="75" y="239" width="415" height="15" rx="5" fill="#171717" stroke="#686868"/>
+  <rect x="78" y="242" width="254" height="9" rx="3" fill="url(#meter)"/>
+  <text x="51" y="280" class="sm bold orange">R</text>
+  <rect x="75" y="265" width="415" height="15" rx="5" fill="#171717" stroke="#686868"/>
+  <rect x="78" y="268" width="241" height="9" rx="3" fill="url(#meter)"/>
+  <rect x="526" y="239" width="326" height="41" rx="7" fill="#303030" stroke="#7c7c7c"/>
+  <circle cx="553" cy="260" r="10" fill="var(--green)"/>
+  <path d="M549 260l3 3 6-7" fill="none" stroke="#0f2c22" stroke-width="2.3"/>
+  <text x="576" y="265" class="sm bold">SOFT CLIP</text>
+  <text x="837" y="265" text-anchor="end" class="sm bold green">ON</text>
+
+  <rect x="50" y="294" width="800" height="309" rx="10" class="recess"/>
+  <g clip-path="url(#plotClip)">
+    <path d="M78 353H824M78 409H824M78 465H824M78 521H824M78 577H824M151 310V596M278 310V596M405 310V596M532 310V596M659 310V596M786 310V596" stroke="#3e3e3e" stroke-width="1"/>
+    <path d="M78 476 C145 475 166 469 192 462 S237 415 263 403 S300 456 327 454 S372 490 403 481 S442 402 469 394 S503 462 529 456 S561 480 588 485 S620 444 648 430 S683 479 708 487 S759 502 824 514 L824 592 L78 592Z" fill="url(#graphFill)"/>
+    <path d="M78 476 C145 475 166 469 192 462 S237 415 263 403 S300 456 327 454 S372 490 403 481 S442 402 469 394 S503 462 529 456 S561 480 588 485 S620 444 648 430 S683 479 708 487 S759 502 824 514" fill="none" stroke="#e0e0e0" stroke-width="3" stroke-linecap="round"/>
+    <path d="M78 465H824" stroke="#c7c7c7" stroke-width="1" stroke-dasharray="4 6" opacity=".75"/>
+  </g>
+  <text x="83" y="331" class="xs muted">+24 dB</text>
+  <text x="83" y="461" class="xs muted">0 dB</text>
+  <text x="83" y="583" class="xs muted">-72 dB</text>
+
+  <rect x="28" y="639" width="844" height="210" rx="16" class="panel"/>
+  <path d="M312 664V827M588 664V827" class="line"/>
+  <g>
+    <circle cx="174" cy="732" r="60" class="knob"/><circle cx="174" cy="732" r="54" class="knob-inner"/>
+    <path d="M174 672l-7 13h14z" fill="var(--neutral)"/>
+    <text x="174" y="824" text-anchor="middle" class="md bold neutral">FREQ</text>
+    <circle cx="450" cy="732" r="60" class="knob"/><circle cx="450" cy="732" r="54" class="knob-inner"/>
+    <path d="M450 672l-7 13h14z" fill="var(--green)"/>
+    <text x="450" y="824" text-anchor="middle" class="md bold green">MORPH</text>
+    <g id="xform-single" style="display:none">
+      <circle cx="726" cy="732" r="60" class="knob"/><circle cx="726" cy="732" r="54" class="knob-inner"/>
+      <path d="M726 672l-7 13h14z" fill="var(--red)"/>
+      <text x="726" y="824" text-anchor="middle" class="md bold red">XFORM</text>
+    </g>
+    <g id="xform-split">
+      <circle cx="665" cy="732" r="35" class="knob"/><circle cx="665" cy="732" r="30" class="knob-inner"/>
+      <path d="M665 697l-6 11h12z" fill="var(--red)"/>
+      <text x="665" y="824" text-anchor="middle" class="md bold red">XFORM</text>
+      <circle cx="787" cy="732" r="35" class="knob"/><circle cx="787" cy="732" r="30" class="knob-inner"/>
+      <path d="M787 697l-6 11h12z" fill="var(--orange)"/>
+      <text x="787" y="824" text-anchor="middle" class="md bold orange">DIST</text>
+    </g>
+  </g>
+
+  <g transform="translate(0 19)">
+  <rect x="28" y="850" width="844" height="590" rx="16" class="panel"/>
+  <rect id="seq-tab" x="45" y="867" width="370" height="54" rx="8" fill="#3b3b3b" stroke="#b3b3b3" stroke-width="1.5" style="cursor:pointer"/>
+  <text id="seq-tab-label" x="230" y="902" text-anchor="middle" class="md bold">SEQUENCER</text>
+  <rect id="xy-tab" x="423" y="867" width="370" height="54" rx="8" fill="#1e1e1e" stroke="#686868" style="cursor:pointer"/>
+  <text id="xy-tab-label" x="608" y="902" text-anchor="middle" class="md bold muted">X-Y PAD</text>
+  <g id="mode-power" role="button" aria-label="Toggle Sequencer and X-Y area" tabindex="0" style="cursor:pointer">
+    <rect x="801" y="867" width="54" height="54" rx="8" fill="#2c5138" stroke="#80d49b" stroke-width="1.5"/>
+    <path d="M828 879v14m-9-9a13 13 0 1 0 18 0" fill="none" stroke="#8cecaa" stroke-width="2.7" stroke-linecap="round"/>
+  </g>
+  <g id="sequencer-panel">
+    <text x="55" y="961" class="sm bold">CLOCK</text><text x="127" y="961" class="sm">1/16</text>
+    <text x="260" y="961" class="sm bold">SYNC</text><text x="330" y="961" class="sm">DOT</text>
+    <text x="470" y="961" class="sm bold">STEPS</text><text x="550" y="961" class="sm">04</text>
+    <path d="M48 977H852" class="line"/>
+    <g class="sm">
+      <text x="59" y="1022" class="muted">01</text><rect x="98" y="992" width="314" height="36" rx="6" class="slot"/><text x="114" y="1017">144  OddHrm+Rez</text>
+      <text x="59" y="1068" class="muted">02</text><rect x="98" y="1038" width="314" height="36" rx="6" class="slot"/><text x="114" y="1063">198  Uh-Oh</text>
+      <text x="59" y="1114" class="muted">03</text><rect x="98" y="1084" width="314" height="36" rx="6" class="slot"/><text x="114" y="1109">157  Shimmer</text>
+      <text x="59" y="1160" class="muted">04</text><rect x="98" y="1130" width="314" height="36" rx="6" fill="#696969" stroke="#bdbdbd" stroke-width="1.5"/><text x="114" y="1155" class="bold">223  Ah Shaper</text>
+      <text x="59" y="1206" class="muted">05</text><rect x="98" y="1176" width="314" height="36" rx="6" class="slot-off"/><text x="114" y="1201" class="muted">001  Null Cube</text>
+      <text x="59" y="1252" class="muted">06</text><rect x="98" y="1222" width="314" height="36" rx="6" class="slot-off"/><text x="114" y="1247" class="muted">001  Null Cube</text>
+      <text x="59" y="1298" class="muted">07</text><rect x="98" y="1268" width="314" height="36" rx="6" class="slot-off"/><text x="114" y="1293" class="muted">001  Null Cube</text>
+      <text x="59" y="1344" class="muted">08</text><rect x="98" y="1314" width="314" height="36" rx="6" class="slot-off"/><text x="114" y="1339" class="muted">001  Null Cube</text>
+      <text x="495" y="1022" class="muted">09</text><rect x="534" y="992" width="314" height="36" rx="6" class="slot-off"/><text x="550" y="1017" class="muted">001  Null Cube</text>
+      <text x="495" y="1068" class="muted">10</text><rect x="534" y="1038" width="314" height="36" rx="6" class="slot-off"/><text x="550" y="1063" class="muted">001  Null Cube</text>
+      <text x="495" y="1114" class="muted">11</text><rect x="534" y="1084" width="314" height="36" rx="6" class="slot-off"/><text x="550" y="1109" class="muted">001  Null Cube</text>
+      <text x="495" y="1160" class="muted">12</text><rect x="534" y="1130" width="314" height="36" rx="6" class="slot-off"/><text x="550" y="1155" class="muted">001  Null Cube</text>
+      <text x="495" y="1206" class="muted">13</text><rect x="534" y="1176" width="314" height="36" rx="6" class="slot-off"/><text x="550" y="1201" class="muted">001  Null Cube</text>
+      <text x="495" y="1252" class="muted">14</text><rect x="534" y="1222" width="314" height="36" rx="6" class="slot-off"/><text x="550" y="1247" class="muted">001  Null Cube</text>
+      <text x="495" y="1298" class="muted">15</text><rect x="534" y="1268" width="314" height="36" rx="6" class="slot-off"/><text x="550" y="1293" class="muted">001  Null Cube</text>
+      <text x="495" y="1344" class="muted">16</text><rect x="534" y="1314" width="314" height="36" rx="6" class="slot-off"/><text x="550" y="1339" class="muted">001  Null Cube</text>
+    </g>
+    <path d="M48 1383H852" class="line"/>
+    <text x="58" y="1415" class="sm bold muted">GLIDE</text>
+    <rect x="143" y="1400" width="226" height="11" rx="5" fill="#171717" stroke="#7a7a7a"/>
+    <rect x="143" y="1401" width="57" height="9" rx="4" fill="var(--neutral)"/>
+    <circle cx="200" cy="1405" r="12" fill="#e4e4e4"/>
+    <text x="399" y="1415" class="sm">20 ms</text>
+  </g>
+  <g id="xy-panel" style="display:none">
+    <text x="55" y="962" class="sm bold muted">BLEND FOUR CUBES</text>
+    <rect x="57" y="981" width="786" height="444" rx="10" class="recess"/>
+    <path d="M450 1015V1390M87 1203H812" stroke="#686868" stroke-dasharray="4 7"/>
+    <circle cx="450" cy="1203" r="17" fill="#303030" stroke="#d8d8d8" stroke-width="3"/>
+    <text x="77" y="1012" class="sm">149 Skweezit</text><text x="823" y="1012" text-anchor="end" class="sm">148 Bendup</text>
+    <text x="77" y="1411" class="sm">150 Lo/High.4</text><text x="823" y="1411" text-anchor="end" class="sm">147 Bendup/Swap</text>
+  </g>
+  </g>
+
+  <rect x="28" y="1477" width="844" height="154" rx="16" class="panel"/>
+  <g class="gain-control">
+    <rect x="38" y="1490" width="164" height="128" fill="transparent"/>
+    <text x="120" y="1518" text-anchor="middle" class="sm bold muted gain-label">DRY/WET</text>
+    <text x="120" y="1518" text-anchor="middle" class="sm bold muted gain-value">100%</text>
+    <circle cx="120" cy="1567" r="26" class="knob"/><circle cx="120" cy="1567" r="22" class="knob-inner"/><path d="M120 1543v12" stroke="#dddddd" stroke-width="3"/>
+  </g>
+  <g class="gain-control">
+    <rect x="258" y="1490" width="164" height="128" fill="transparent"/>
+    <text x="340" y="1518" text-anchor="middle" class="sm bold muted gain-label">INPUT</text>
+    <text x="340" y="1518" text-anchor="middle" class="sm bold muted gain-value">0.0 dB</text>
+    <circle cx="340" cy="1567" r="26" class="knob"/><circle cx="340" cy="1567" r="22" class="knob-inner"/><path d="M340 1543v12" stroke="var(--green)" stroke-width="3"/>
+  </g>
+  <g class="gain-control">
+    <rect x="478" y="1490" width="164" height="128" fill="transparent"/>
+    <text x="560" y="1518" text-anchor="middle" class="sm bold muted gain-label">PRE-CLIP</text>
+    <text x="560" y="1518" text-anchor="middle" class="sm bold muted gain-value">0.0 dB</text>
+    <circle cx="560" cy="1567" r="26" class="knob"/><circle cx="560" cy="1567" r="22" class="knob-inner"/><path d="M560 1543v12" stroke="var(--neutral)" stroke-width="3"/>
+  </g>
+  <g class="gain-control">
+    <rect x="698" y="1490" width="164" height="128" fill="transparent"/>
+    <text x="780" y="1518" text-anchor="middle" class="sm bold muted gain-label">POST-CLIP</text>
+    <text x="780" y="1518" text-anchor="middle" class="sm bold muted gain-value">0.0 dB</text>
+    <circle cx="780" cy="1567" r="26" class="knob"/><circle cx="780" cy="1567" r="22" class="knob-inner"/><path d="M780 1543v12" stroke="var(--orange)" stroke-width="3"/>
+  </g>
+</svg>
