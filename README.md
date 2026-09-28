@@ -6,6 +6,9 @@ Windows x64 VST3 implementation of a seven-stage morphing filter using 289
 recovered cube records. The filter behavior is an engineering approximation,
 not a bit-exact hardware emulation.
 
+Without a preset WAV export from a hardware unit, the stored preset settings
+cannot be recovered, so preset emulation cannot be brought closer yet.
+
 ## Build
 
 Requirements: CMake 3.22 or newer, Visual Studio with the MSVC C++ toolchain
