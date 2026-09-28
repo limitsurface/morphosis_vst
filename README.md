@@ -7,7 +7,10 @@ recovered cube records. The filter behavior is an engineering approximation,
 not a bit-exact hardware emulation.
 
 Without a preset WAV export from a hardware unit, the stored preset settings
-cannot be recovered, so preset emulation cannot be brought closer yet.
+cannot be recovered, so preset emulation cannot be brought closer yet. This
+affects largely Xform, gain and dist positions for .4 distortion enabled 
+presets. Filter cubes are fully implemented.
+
 
 ## Build
 
