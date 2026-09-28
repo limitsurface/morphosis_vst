@@ -39,7 +39,8 @@ juce_add_plugin(Morphosis
     VERSION ${PROJECT_VERSION}
     PRODUCT_NAME "MORPHOSIS"
     PLUGIN_NAME "MORPHOSIS"
-    COMPANY_NAME "TEMUSOUND"
+    COMPANY_NAME "Morphosis Inc"
+    BUNDLE_ID "com.MorphosisInc.Morphosis"
     DESCRIPTION "MORPHOSIS seven-stage recovered filter"
     PLUGIN_MANUFACTURER_CODE Temu
     PLUGIN_CODE Mphs

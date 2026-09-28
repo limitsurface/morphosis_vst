@@ -1935,17 +1935,17 @@ void MorphosisInlineToggle::paint (juce::Graphics& graphics)
 
     if (style == Style::softClip)
     {
-        const auto check = juce::Rectangle<float> (10.0f, bounds.getCentreY() - 10.0f,
-                                                    20.0f, 20.0f);
+        const auto check = juce::Rectangle<float> (13.0f, bounds.getCentreY() - 7.0f,
+                                                    14.0f, 14.0f);
         graphics.setColour (getToggleState() ? kFmxMorph : kStaticGrey);
         graphics.fillEllipse (check);
         if (getToggleState())
         {
             graphics.setColour (juce::Colour::fromRGB (15, 44, 34));
-            graphics.drawLine (check.getX() + 5.0f, check.getCentreY(),
-                               check.getCentreX() - 1.0f, check.getBottom() - 5.0f, 1.8f);
-            graphics.drawLine (check.getCentreX() - 1.0f, check.getBottom() - 5.0f,
-                               check.getRight() - 4.0f, check.getY() + 5.0f, 1.8f);
+            graphics.drawLine (check.getX() + 3.5f, check.getCentreY(),
+                               check.getCentreX() - 0.7f, check.getBottom() - 3.5f, 1.3f);
+            graphics.drawLine (check.getCentreX() - 0.7f, check.getBottom() - 3.5f,
+                               check.getRight() - 2.8f, check.getY() + 3.5f, 1.3f);
         }
         graphics.setColour (juce::Colour::fromRGB (240, 240, 240));
         graphics.drawText ("SOFT CLIP", 42, 0, juce::roundToInt (bounds.getWidth() * 0.45f),
@@ -1973,7 +1973,7 @@ void MorphosisArrowButton::paintButton (juce::Graphics& graphics,
     const auto colour = shouldDrawButtonAsHighlighted ? juce::Colours::white : kFooterGrey;
     const auto bounds = getLocalBounds().toFloat().reduced (4.0f);
     const auto centre = bounds.getCentre();
-    const auto halfHeight = bounds.getHeight() * 0.23f;
+    const auto halfHeight = bounds.getHeight() * 0.161f;
     juce::Path arrow;
     if (pointsLeft)
     {
@@ -2218,7 +2218,7 @@ juce::Rectangle<int> MorphosisXYPad::getSlotBounds (int slot) const noexcept
 juce::Rectangle<float> MorphosisXYPad::padBounds() const noexcept
 {
     const auto bounds = getLocalBounds().toFloat();
-    return bounds.withTrimmedTop (bounds.getHeight() * 0.32f)
+    return bounds.withTrimmedTop (bounds.getHeight() * 0.37f)
                  .reduced (18.0f, 12.0f);
 }
 
@@ -3072,9 +3072,6 @@ void MorphosisAudioProcessorEditor::drawStaticShell (juce::Graphics& graphics)
     }
     else
     {
-        drawText ("BLEND FOUR CUBES", { 52.0f, 944.0f, 300.0f, 34.0f }, 16.0f,
-                  kStaticGrey.withAlpha (xyActive ? 1.0f : 0.56f), true,
-                  juce::Justification::left);
         const auto interpolation = snapshot.xyEncodedDomain
                                      ? juce::String ("ENCODED (EXPERIMENTAL)")
                                      : snapshot.xyInterpolation
@@ -3087,12 +3084,12 @@ void MorphosisAudioProcessorEditor::drawStaticShell (juce::Graphics& graphics)
         const auto pairWidth = labelFont.getStringWidthFloat (label) + 12.0f
                              + valueFont.getStringWidthFloat (interpolation);
         const auto left = 842.0f - pairWidth;
-        drawText (label, { left, 944.0f, labelFont.getStringWidthFloat (label) + 2.0f, 36.0f },
+        drawText (label, { left, 1120.0f, labelFont.getStringWidthFloat (label) + 2.0f, 36.0f },
                   15.0f, kStaticGrey.withAlpha (xyActive ? 1.0f : 0.56f), true,
                   juce::Justification::left);
         drawText (interpolation,
                   { left + labelFont.getStringWidthFloat (label) + 12.0f,
-                    944.0f, valueFont.getStringWidthFloat (interpolation) + 3.0f, 36.0f },
+                    1120.0f, valueFont.getStringWidthFloat (interpolation) + 3.0f, 36.0f },
                   15.0f, juce::Colour::fromRGB (240, 240, 240)
                       .withAlpha (xyActive ? 1.0f : 0.56f), false,
                   juce::Justification::left);
@@ -3130,7 +3127,7 @@ void MorphosisAudioProcessorEditor::resized()
     setDesignBounds (sequenceLengthBox, { 590.0f, 944.0f, 238.0f, 36.0f });
     setDesignBounds (sequencePosition, { 455.0f, 942.0f, 270.0f, 46.0f });
     setDesignBounds (sequenceGlide, { 58.0f, 1388.0f, 420.0f, 56.0f });
-    setDesignBounds (xyInterpolationBox, { 500.0f, 944.0f, 342.0f, 36.0f });
+    setDesignBounds (xyInterpolationBox, { 500.0f, 1120.0f, 342.0f, 36.0f });
     setDesignBounds (xyPad, { 58.0f, 986.0f, 784.0f, 438.0f });
 
     setDesignBounds (frequency, { 36.0f, 650.0f, 276.0f, 199.0f });

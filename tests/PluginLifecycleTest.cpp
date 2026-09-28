@@ -154,6 +154,12 @@ struct MorphosisEditorTestAccess
         return editor.xyPad.getBounds();
     }
 
+    static juce::Rectangle<int> xyInterpolationBounds (
+        const MorphosisAudioProcessorEditor& editor)
+    {
+        return editor.xyInterpolationBox.getBounds();
+    }
+
     static juce::Rectangle<int> xySlotBounds (
         const MorphosisAudioProcessorEditor& editor, int slot)
     {
@@ -801,6 +807,12 @@ void checkModeTabPowerContract()
     if (processor->getProcessingMode() != morphosis::ProcessingMode::preset)
         throw std::runtime_error ("mode-panel fixture did not begin powered off");
     MorphosisEditorTestAccess::selectXYTab (editor);
+    const auto xyBounds = MorphosisEditorTestAccess::xyPadBounds (editor);
+    const auto interpolationBounds = MorphosisEditorTestAccess::xyInterpolationBounds (editor);
+    if (interpolationBounds.getY() <= xyBounds.getY() + xyBounds.getHeight() * 0.29f
+        || interpolationBounds.getBottom()
+               > xyBounds.getY() + xyBounds.getHeight() * 0.37f + 12.0f)
+        throw std::runtime_error ("X-Y interpolation row overlaps its divider or pad");
     if (processor->getProcessingMode() != morphosis::ProcessingMode::preset
         || ! MorphosisEditorTestAccess::xyTabSelected (editor)
         || MorphosisEditorTestAccess::sequenceTabSelected (editor))
