@@ -1,5 +1,7 @@
 # MORPHOSIS
 
+![MORPHOSIS stereo morphing filter banner](assets/readme/morphosis-banner.png)
+
 Windows x64 VST3 implementation of a seven-stage morphing filter using 289
 recovered cube records. The filter behavior is an engineering approximation,
 not a bit-exact hardware emulation.
