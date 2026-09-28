@@ -2830,7 +2830,12 @@ MorphosisAudioProcessorEditor::MorphosisAudioProcessorEditor (MorphosisAudioProc
     presetText.onClick = [this]
     {
         showPresetMenu (presetText.getScreenBounds(),
-                        [this] (int index) { processorRef.setCurrentProgram (index); }, false);
+                        [this] (int index)
+                        {
+                            processorRef.setCurrentProgram (index);
+                            if (morphosis::usesDotFourDistortionLayout (index))
+                                setFloatParameter (morphosis::parameter_ids::transform, -5.0f);
+                        }, false);
     };
 
     addAndMakeVisible (presetBox);

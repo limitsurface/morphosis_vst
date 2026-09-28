@@ -1129,6 +1129,23 @@ void checkMainPresetAnchorAndSlotCallbacks()
     if (picker->isVisible())
         throw std::runtime_error ("main-selector outside click did not close its picker");
 
+    MorphosisEditorTestAccess::useManualPickerGrouping (editor);
+    setParameter (*processor, morphosis::parameter_ids::transform, 2.0f);
+    MorphosisEditorTestAccess::clickMainPresetSelector (editor);
+    clickPicker (editor, pickerRootCategoryPoint (editor, 1));
+    clickPicker (editor, pickerPaneRowPoint (
+        editor, MorphosisEditorTestAccess::pickerPanelBounds (editor), 0));
+    if (processor->getPresetIndex() != 1
+        || std::abs (processor->getParameterSnapshot().transform + 5.0f) > 1.0e-5f)
+        throw std::runtime_error ("main-selector .4 preset did not default XFORM to -5");
+
+    setParameter (*processor, morphosis::parameter_ids::transform, 2.0f);
+    MorphosisEditorTestAccess::clickMainPresetSelector (editor);
+    choosePresetZeroFromOpenPicker (editor);
+    if (processor->getPresetIndex() != 0
+        || std::abs (processor->getParameterSnapshot().transform - 2.0f) > 1.0e-5f)
+        throw std::runtime_error ("main-selector non-.4 preset changed XFORM");
+
     constexpr int sequenceSlot = 11;
     processor->activateSequencer();
     processor->setSequenceSlot (sequenceSlot, 123);
@@ -1146,6 +1163,8 @@ void checkMainPresetAnchorAndSlotCallbacks()
     if (processor->getParameterSnapshot().sequencePresets[
             static_cast<std::size_t> (sequenceSlot)] != 0)
         throw std::runtime_error ("sequence-slot preset callback did not update the selected slot");
+    if (std::abs (processor->getParameterSnapshot().transform - 2.0f) > 1.0e-5f)
+        throw std::runtime_error ("sequence-slot selection changed XFORM");
 
     constexpr int xySlot = 2;
     processor->activateXY();
