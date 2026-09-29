@@ -1279,6 +1279,46 @@ void checkPresetPickerNavigation()
         throw std::runtime_error ("outside click did not dismiss the preset picker");
 }
 
+void checkDesktopPickerFlyouts()
+{
+    auto processor = std::make_unique<MorphosisAudioProcessor>();
+    MorphosisAudioProcessorEditor editor (*processor);
+    editor.addToDesktop (juce::ComponentPeer::windowIsTemporary);
+    const auto area = juce::Desktop::getInstance().getDisplays().getPrimaryDisplay()->userArea;
+    editor.setTopLeftPosition (area.getX() + 20, area.getY() + 20);
+    editor.setVisible (true);
+
+    MorphosisEditorTestAccess::clickMainPresetSelector (editor);
+    auto* picker = MorphosisEditorTestAccess::picker (editor);
+    if (picker == nullptr || ! picker->isOnDesktop() || ! picker->isVisible())
+        throw std::runtime_error ("hosted preset picker did not open as a desktop popup");
+
+    clickPicker (editor, pickerRootCategoryPoint (editor, 1));
+    const auto flyout = MorphosisEditorTestAccess::pickerFlyoutBounds (editor);
+    if (flyout.isEmpty() || ! picker->getLocalBounds().contains (flyout))
+        throw std::runtime_error ("desktop preset category did not open a flyout");
+
+    const auto childPoint = pickerPaneRowPoint (editor, flyout, 0);
+    picker->mouseMove (mouseEventAt (*picker, childPoint,
+                                    juce::ModifierKeys::noModifiers));
+    const auto leaf = MorphosisEditorTestAccess::pickerLeafBounds (editor);
+    if (leaf.isEmpty() || ! picker->getLocalBounds().contains (leaf)
+        || picker->getScreenX() + leaf.getRight() <= editor.getScreenBounds().getRight())
+        throw std::runtime_error ("desktop preset leaf did not extend beyond the editor");
+
+    clickPicker (editor, pickerPaneRowPoint (editor, leaf, 0));
+    if (picker->isVisible() || picker->isOnDesktop())
+        throw std::runtime_error ("desktop preset selection did not dismiss its popup");
+
+    MorphosisEditorTestAccess::clickMainPresetSelector (editor);
+    if (! picker->isVisible() || ! picker->isOnDesktop())
+        throw std::runtime_error ("desktop preset picker did not reopen after selection");
+    clickPicker (editor, { 1.0f, 1.0f });
+    if (picker->isVisible() || picker->isOnDesktop())
+        throw std::runtime_error ("desktop outside click did not dismiss the picker");
+    editor.removeFromDesktop();
+}
+
 } // namespace
 
 int main (int argc, char* argv[])
@@ -1290,6 +1330,7 @@ int main (int argc, char* argv[])
         {
             checkPresetPickerNavigation();
             checkMainPresetAnchorAndSlotCallbacks();
+            checkDesktopPickerFlyouts();
             std::cout << "Preset picker interaction regressions passed\n";
             return 0;
         }
@@ -1305,6 +1346,7 @@ int main (int argc, char* argv[])
         checkDistortionControls();
         checkPortraitEditorContracts();
         checkPresetPickerNavigation();
+        checkDesktopPickerFlyouts();
         const auto started = std::chrono::steady_clock::now();
 
         for (int cycle = 0; cycle < 4; ++cycle)

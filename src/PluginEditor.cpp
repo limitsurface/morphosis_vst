@@ -208,7 +208,31 @@ public:
         anchorScreenBounds = screenAnchor;
 
         if (auto* parent = getParentComponent())
-            setBounds (parent->getLocalBounds());
+        {
+            editorParent = parent;
+            if (parent->getPeer() != nullptr)
+            {
+                const auto display = juce::Desktop::getInstance().getDisplays()
+                                         .getDisplayForRect (screenAnchor);
+                const auto userArea = display->userArea;
+                const auto popupWidth = juce::jmin (userArea.getWidth(),
+                    juce::jmax (960, juce::roundToInt (1500.0f * scale)));
+                const auto popupHeight = juce::jmin (userArea.getHeight(),
+                    juce::jmax (700, juce::roundToInt (1050.0f * scale)));
+                const auto popupX = juce::jlimit (userArea.getX(),
+                    userArea.getRight() - popupWidth, screenAnchor.getX() - 16);
+                const auto popupY = juce::jlimit (userArea.getY(),
+                    userArea.getBottom() - popupHeight,
+                    preferUpwards ? screenAnchor.getY() - popupHeight
+                                  : screenAnchor.getBottom());
+                addToDesktop (juce::ComponentPeer::windowIsTemporary);
+                setBounds (popupX, popupY, popupWidth, popupHeight);
+            }
+            else
+            {
+                setBounds (parent->getLocalBounds());
+            }
+        }
 
         setVisible (true);
         toFront (false);
@@ -220,6 +244,15 @@ public:
     void dismiss()
     {
         setVisible (false);
+        if (isOnDesktop())
+        {
+            removeFromDesktop();
+            if (editorParent != nullptr)
+            {
+                editorParent->addChildComponent (this);
+                setBounds (editorParent->getLocalBounds());
+            }
+        }
         onSelected = nullptr;
         onGroupingChanged = nullptr;
         keyboardRow = -1;
@@ -330,6 +363,12 @@ public:
         layoutPanels (true);
     }
 
+    void focusOfChildComponentChanged (juce::Component::FocusChangeType) override
+    {
+        if (isOnDesktop() && isVisible() && ! hasKeyboardFocus (true))
+            dismiss();
+    }
+
     void mouseMove (const juce::MouseEvent& event) override
     {
         if (! isVisible())
@@ -343,7 +382,7 @@ public:
         hoveredRow = hit.row;
 
         if (hit.pane == 0 && view == View::root && hit.row >= 0
-            && getWidth() >= getHeight())
+            && ! singlePaneNavigation())
         {
             const auto kind = rows[static_cast<std::size_t> (hit.row)].kind;
             const auto value = rows[static_cast<std::size_t> (hit.row)].value;
@@ -442,6 +481,11 @@ private:
         return juce::jlimit (minimum, parentHeight, content);
     }
 
+    bool singlePaneNavigation() const noexcept
+    {
+        return isOnDesktop() ? getWidth() < 900 : getWidth() < getHeight();
+    }
+
     int currentPanelHeight() const noexcept
     {
         if (view == View::root)
@@ -509,26 +553,25 @@ private:
                                             *selectedCategory)
                                       : nullptr;
         const auto rootWidth = juce::jmin (
-            getWidth() < getHeight() ? juce::jmax (1, parentBounds.getWidth() - 8)
+            singlePaneNavigation() ? juce::jmax (1, parentBounds.getWidth() - 8)
                                      : juce::jmax (300, juce::roundToInt (520.0f * scale)),
             juce::jmax (1, parentBounds.getWidth() - 8));
         const auto childWidth = juce::jmax (250, juce::roundToInt (360.0f * std::max (0.7f, scale)));
         const auto leafWidth = juce::jmax (300, juce::roundToInt (500.0f * std::max (0.7f, scale)));
-        const auto singlePaneNavigation = getWidth() < getHeight();
-        const auto hasChild = ! singlePaneNavigation && view == View::root
+        const auto useSinglePane = singlePaneNavigation();
+        const auto hasChild = ! useSinglePane && view == View::root
                            && (selectedCategory != nullptr || favouritesFlyout);
         const auto hasLeaf = view == View::root && selectedCategory != nullptr
                           && directSubcategory == nullptr && subcategoryIndex >= 0
                           && subcategoryIndex < static_cast<int> (
                                  selectedCategory->subcategoryCount);
         const auto overlap = hasChild ? 1 : 0;
-        const auto rootHeight = currentPanelHeight();
+        const auto rootHeight = juce::jmax (
+            currentPanelHeight(),
+            desiredHeight (static_cast<int> (taxonomy.categoryCount) + 5, 3, true));
         if (repositionRoot || panelBounds.isEmpty())
         {
-            const auto localAnchor = getParentComponent() != nullptr
-                                       ? getParentComponent()->getLocalPoint (
-                                             nullptr, anchorScreenBounds.getPosition())
-                                       : anchorScreenBounds.getPosition();
+            const auto localAnchor = getLocalPoint (nullptr, anchorScreenBounds.getPosition());
             auto x = juce::jlimit (4,
                                    juce::jmax (4, parentBounds.getWidth() - rootWidth - 4),
                                    localAnchor.x);
@@ -768,7 +811,7 @@ private:
                     {
                         categoryIndex = row.value;
                         subcategoryIndex = -1;
-                        if (getWidth() < getHeight())
+                        if (singlePaneNavigation())
                         {
                             view = View::categories;
                             favouritesFlyout = false;
@@ -805,7 +848,7 @@ private:
                     {
                         categoryIndex = -1;
                         subcategoryIndex = -1;
-                        if (getWidth() < getHeight())
+                        if (singlePaneNavigation())
                         {
                             view = View::favourites;
                             favouritesFlyout = false;
@@ -1041,7 +1084,7 @@ private:
                 {
                     categoryIndex = row.value;
                     subcategoryIndex = -1;
-                    if (getWidth() < getHeight())
+                    if (singlePaneNavigation())
                     {
                         view = View::categories;
                         favouritesFlyout = false;
@@ -1479,6 +1522,7 @@ private:
     juce::Rectangle<int> flyoutBounds;
     juce::Rectangle<int> leafBounds;
     juce::Rectangle<int> anchorScreenBounds;
+    juce::Component::SafePointer<juce::Component> editorParent;
     float scale = 1.0f;
     int categoryIndex = -1;
     int subcategoryIndex = -1;
@@ -1500,6 +1544,8 @@ private:
 MorphosisAudioProcessorEditor::~MorphosisAudioProcessorEditor()
 {
     stopTimer();
+    if (presetPicker != nullptr)
+        presetPicker->dismiss();
 }
 
 void MorphosisCaptionLabel::mouseEnter (const juce::MouseEvent& event)
@@ -3185,7 +3231,8 @@ void MorphosisAudioProcessorEditor::resized()
     threshold.setVisible (distortionLayout);
     if (presetPicker != nullptr)
     {
-        presetPicker->setBounds (getLocalBounds());
+        if (! presetPicker->isOnDesktop())
+            presetPicker->setBounds (getLocalBounds());
         presetPicker->setScale (designScale);
     }
     repaint();
