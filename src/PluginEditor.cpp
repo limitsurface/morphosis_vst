@@ -218,7 +218,7 @@ public:
                 const auto popupWidth = juce::jmin (userArea.getWidth(),
                     juce::jmax (960, juce::roundToInt (1500.0f * scale)));
                 const auto popupHeight = juce::jmin (userArea.getHeight(),
-                    juce::jmax (700, juce::roundToInt (1050.0f * scale)));
+                    juce::jmax (700, juce::roundToInt (900.0f * scale)));
                 const auto popupX = juce::jlimit (userArea.getX(),
                     userArea.getRight() - popupWidth, screenAnchor.getX() - 16);
                 const auto popupY = juce::jlimit (userArea.getY(),
@@ -3233,7 +3233,7 @@ void MorphosisAudioProcessorEditor::resized()
     {
         if (! presetPicker->isOnDesktop())
             presetPicker->setBounds (getLocalBounds());
-        presetPicker->setScale (designScale);
+        presetPicker->setScale (std::max (1.1f, designScale * 1.7f));
     }
     repaint();
 }

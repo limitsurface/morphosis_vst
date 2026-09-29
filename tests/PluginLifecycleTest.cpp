@@ -980,14 +980,18 @@ void checkPortraitEditorContracts()
 
 int pickerHeaderHeight (const MorphosisAudioProcessorEditor& editor)
 {
+    const auto pickerScale = juce::jmax (1.1f,
+        MorphosisEditorTestAccess::designScale (editor) * 1.7f);
     return juce::jmax (32, juce::roundToInt (
-        42.0f * juce::jmax (0.7f, MorphosisEditorTestAccess::designScale (editor))));
+        42.0f * pickerScale));
 }
 
 int pickerRowHeight (const MorphosisAudioProcessorEditor& editor)
 {
+    const auto pickerScale = juce::jmax (1.1f,
+        MorphosisEditorTestAccess::designScale (editor) * 1.7f);
     return juce::jmax (22, juce::roundToInt (
-        28.0f * juce::jmax (0.7f, MorphosisEditorTestAccess::designScale (editor))));
+        28.0f * pickerScale));
 }
 
 juce::Point<float> pickerRootCategoryPoint (
@@ -1292,11 +1296,16 @@ void checkDesktopPickerFlyouts()
     auto* picker = MorphosisEditorTestAccess::picker (editor);
     if (picker == nullptr || ! picker->isOnDesktop() || ! picker->isVisible())
         throw std::runtime_error ("hosted preset picker did not open as a desktop popup");
+    if (picker->getWidth() >= 1500
+        && MorphosisEditorTestAccess::pickerPanelBounds (editor).getWidth() < 570)
+        throw std::runtime_error ("desktop preset root is too narrow at the default editor size");
 
     clickPicker (editor, pickerRootCategoryPoint (editor, 1));
     const auto flyout = MorphosisEditorTestAccess::pickerFlyoutBounds (editor);
     if (flyout.isEmpty() || ! picker->getLocalBounds().contains (flyout))
         throw std::runtime_error ("desktop preset category did not open a flyout");
+    if (picker->getWidth() >= 1500 && flyout.getWidth() < 400)
+        throw std::runtime_error ("desktop preset flyout is too narrow to read");
 
     const auto childPoint = pickerPaneRowPoint (editor, flyout, 0);
     picker->mouseMove (mouseEventAt (*picker, childPoint,
